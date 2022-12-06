@@ -2,8 +2,17 @@ package com.example.recyclerproject
 
 
 
-    data class ItemViewModel(val image:Int, val productName:String, val productCost:String, val productDesc:String) {
+class ItemViewModel {
+    var productDesc: String = ""
+    var productCost : String = ""
+    var productName: String = ""
+    var image: String = ""
+}
 
-        val text:CharSequence? = null
 
-    }
+
+//    data class ItemViewModel(val image:Int, val productName:String, val productCost:String, val productDesc:String) {
+//
+//        val text:CharSequence? = null
+//
+//    }

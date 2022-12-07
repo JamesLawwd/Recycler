@@ -1,148 +1,55 @@
 package com.example.recyclerproject
 
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide import com.bumptech.glide.request.RequestOptions
 
-class RecyclerAdapter(var context: Context):
-    RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
-    var productList : List<ItemViewModel> = listOf() // empty  list
+class CustomAdapter(private val mList: List<ItemViewModel>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {}
-    //Note below code returns above class and pass the view
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.single_item, parent, false)
+    // create new views
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        // inflates the card_view_design view
+        // that is used to hold list item
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.single_item, parent, false)
+
         return ViewHolder(view)
     }
-    //so far item view is same as single item
-    override fun onBindViewHolder(holder: RecyclerAdapter.ViewHolder, position: Int) {
-        val productName= holder.itemView.findViewById(R.id.productName) as TextView
-        val productCost = holder.itemView.findViewById(R.id.productCost) as TextView
-        val productDesc = holder.itemView.findViewById(R.id.productDesc) as TextView
-        val image = holder.itemView.findViewById(R.id.imageView) as ImageView
 
-        //bind
-        val item = productList[position]
-        productName.text=item.productName
-        productCost.text = item.productCost
-        productDesc.text = item.productDesc
+    // binds the list items to a view
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        //
-        Glide.with(context).load(item.image)
-            .apply(RequestOptions().centerCrop())
-            .into(image)
+        val ItemViewModel = mList[position]
 
+        // sets the image to the imageview from our itemHolder class
+        holder.productImage.setImageResource(ItemViewModel.image)
 
+        // sets the text to the textview from our itemHolder class
+        holder.productName.text = ItemViewModel.text
+        holder.productCost.text = ItemViewModel.text
+        holder.productDesc.text = ItemViewModel.text
 
-                holder.itemView.setOnClickListener {
-
-                    // Share Preferences -> Temporary Storage in an android applications
-                    // 1. FaceBook-> Temporary Storage for login credentials
-                    // 2. Game levels
-                    // 3. Sessions
-
-                    val prefs:SharedPreferences = context.getSharedPreferences("productBD", Context.MODE_PRIVATE)
-                    val editor: SharedPreferences.Editor = prefs.edit()
-
-                    editor.putString("productName", item.productName)
-                    editor.putString("productCost", item.productCost)
-                    editor.putString("productDesc", item.productDesc)
-                    editor.putString("image", item.image)
-
-                    editor.apply()
-
-//                    val intent = Intent(context, SingleActivity::class.java)
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                    context.startActivity(intent)
-
-                    val intent = Intent(context, SingleActivity::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(intent)
-
-
-
-
-
-
-
-                }
     }
 
-    override fun getItemCount(): Int { //count the number items coming from the API
-        return productList.size
-    }
-    //we will call this function on Loopj response
-    fun setProductListItems(productList: List<ItemViewModel>){
-        this.productList = productList
-        notifyDataSetChanged()
+    // return the number of the items in the list
+    override fun getItemCount(): Int {
+        return mList.size
     }
 
+    // Holds the views for adding it to image and text
+    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
+        val productImage: ImageView = itemView.findViewById(R.id.imageView)
+        val productName: TextView = itemView.findViewById(R.id.productName)
+        val productCost: TextView = itemView.findViewById(R.id.productCost)
+        val productDesc: TextView = itemView.findViewById(R.id.productDesc)
+
+    }
 }
-
-
-
-
-
-
-
-
-//View holder holds the views in single item.xml
-
-//import android.view.LayoutInflater
-//import android.view.View
-//import android.view.ViewGroup
-//import android.widget.ImageView
-//import android.widget.TextView
-//import androidx.recyclerview.widget.RecyclerView
-//
-//class CustomAdapter(private val mList: List<ItemViewModel>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
-//
-//    // create new views
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-//        // inflates the card_view_design view
-//        // that is used to hold list item
-//        val view = LayoutInflater.from(parent.context)
-//            .inflate(R.layout.single_item, parent, false)
-//
-//        return ViewHolder(view)
-//    }
-//
-//    // binds the list items to a view
-//    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//
-//        val ItemViewModel = mList[position]
-//
-//        // sets the image to the imageview from our itemHolder class
-//        holder.productImage.setImageResource(ItemViewModel.image)
-//
-//        // sets the text to the textview from our itemHolder class
-//        holder.productName.text = ItemViewModel.text
-//        holder.productCost.text = ItemViewModel.text
-//        holder.productDesc.text = ItemViewModel.text
-//
-//    }
-//
-//    // return the number of the items in the list
-//    override fun getItemCount(): Int {
-//        return mList.size
-//    }
-//
-//    // Holds the views for adding it to image and text
-//    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-//        val productImage: ImageView = itemView.findViewById(R.id.imageView)
-//        val productName: TextView = itemView.findViewById(R.id.productName)
-//        val productCost: TextView = itemView.findViewById(R.id.productCost)
-//        val productDesc: TextView = itemView.findViewById(R.id.productDesc)
-//
-//    }
-//}
 
 
 // contains 3 items used in recycler views
